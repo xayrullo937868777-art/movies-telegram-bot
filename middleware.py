@@ -49,9 +49,20 @@ class SubscriptionMiddleware(BaseMiddleware):
             return await handler(event, data)
             
         # User is not subscribed! Block them and send subscription request
+        channel_link = REQUIRED_CHANNEL_LINK
+        if not channel_link or "your_channel_invite_link" in channel_link:
+            try:
+                chat = await bot.get_chat(chat_id=REQUIRED_CHANNEL_ID)
+                if chat.username:
+                    channel_link = f"https://t.me/{chat.username}"
+                elif chat.invite_link:
+                    channel_link = chat.invite_link
+            except Exception as e:
+                logger.error(f"Error fetching channel link dynamically: {e}")
+
         keyboard = InlineKeyboardMarkup(
             inline_keyboard=[
-                [InlineKeyboardButton(text="📢 Kanalga a'zo bo'lish", url=REQUIRED_CHANNEL_LINK)],
+                [InlineKeyboardButton(text="📢 Kanalga a'zo bo'lish", url=channel_link)],
                 [InlineKeyboardButton(text="✅ A'zolikni tekshirish", callback_data="check_sub")]
             ]
         )
