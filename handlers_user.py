@@ -80,17 +80,21 @@ async def send_movie_to_user(message: Message, movie: dict):
     # Increment views
     await db.increment_views(movie['code'])
     
-    # If custom description (caption) is provided by the admin, use it directly.
-    # Otherwise, fallback to the default template format.
-    if movie['description'] and movie['description'].strip():
-        caption = movie['description']
-    else:
-        caption = (
-            f"🎬 <b>Kino nomi:</b> {movie['title']}\n"
-            f"🔑 <b>Kino kodi:</b> <code>{movie['code']}</code>\n"
-            f"🎭 <b>Janri:</b> {movie['genre']}\n"
-            f"👁 <b>Ko'rishlar soni:</b> {movie['views'] + 1}"
-        )
+    # Build standard caption template containing views count
+    caption_parts = [
+        f"🎬 <b>Kino nomi:</b> {movie['title']}",
+        f"🔑 <b>Kino kodi:</b> <code>{movie['code']}</code>",
+        f"🎭 <b>Janri:</b> {movie['genre']}",
+        f"👁 <b>Ko'rishlar soni:</b> {movie['views'] + 1}"
+    ]
+    
+    # Append custom description if it exists and is not the default fallback
+    custom_desc = movie['description']
+    if custom_desc and custom_desc.strip() and custom_desc != "Avtomatik yuklangan kino":
+        caption_parts.append("")  # Blank line separator
+        caption_parts.append(custom_desc)
+        
+    caption = "\n".join(caption_parts)
     
     try:
         if movie['file_type'] == 'video':
