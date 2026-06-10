@@ -94,12 +94,12 @@ async def send_movie_to_user(message: Message, movie: dict):
     
     try:
         if movie['file_type'] == 'video':
-            await message.answer_video(video=movie['file_id'], caption=caption, parse_mode="HTML")
+            await message.answer_video(video=movie['file_id'], caption=caption, parse_mode="HTML", protect_content=True)
         elif movie['file_type'] == 'document':
-            await message.answer_document(document=movie['file_id'], caption=caption, parse_mode="HTML")
+            await message.answer_document(document=movie['file_id'], caption=caption, parse_mode="HTML", protect_content=True)
         else:
             # Fallback
-            await message.answer_document(document=movie['file_id'], caption=caption, parse_mode="HTML")
+            await message.answer_document(document=movie['file_id'], caption=caption, parse_mode="HTML", protect_content=True)
     except Exception as e:
         await message.answer(f"Xatolik yuz berdi: Kino faylini yuborib bo'lmadi.\n{str(e)}")
 
