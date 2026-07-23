@@ -1,25 +1,13 @@
 import os
-from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv()
+# Telegram Bot Tokeni
+BOT_TOKEN = os.getenv("BOT_TOKEN", "8965782474:AAGUL804IBYXScsIRtduFplNrH92TqaKJKo")
 
-BOT_TOKEN = os.getenv("BOT_TOKEN", "")
+# Admin Telegram ID
+ADMIN_ID = int(os.getenv("ADMIN_ID", "8542141273"))
 
-# Parse admins list
-ADMINS_RAW = os.getenv("ADMINS", "")
-ADMINS = []
+# Yuklab olinadigan musiqalar papkasi
+DOWNLOADS_DIR = os.path.join(os.path.dirname(__file__), "downloads")
 
-if ADMINS_RAW:
-    try:
-        ADMINS = [int(admin_id.strip()) for admin_id in ADMINS_RAW.split(",") if admin_id.strip()]
-    except ValueError:
-        print("WARNING: ADMINS in .env contains non-integer values.")
-
-# SQLite Database filename
-DB_NAME = "movies.db"
-
-# Compulsory Subscription configuration
-REQUIRED_CHANNEL_ID_RAW = os.getenv("REQUIRED_CHANNEL_ID", "")
-REQUIRED_CHANNEL_ID = int(REQUIRED_CHANNEL_ID_RAW.strip()) if REQUIRED_CHANNEL_ID_RAW else None
-REQUIRED_CHANNEL_LINK = os.getenv("REQUIRED_CHANNEL_LINK", "")
+if not os.path.exists(DOWNLOADS_DIR):
+    os.makedirs(DOWNLOADS_DIR)
